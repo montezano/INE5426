@@ -50,7 +50,7 @@ servico meu_servico{
 
 				inteiro [] array = inteiro [1000]; // criando um array
 
-				se (!const1 || const1 & verdadeiro){
+				se (!const1 || const1 && verdadeiro){
 
 				}
 
