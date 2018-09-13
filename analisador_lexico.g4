@@ -96,7 +96,7 @@ principal : importar? ( escopo | (PRINCIPAL E_CHAVE (logica_da_aplicacao) D_CHAV
 
 importar : IMPORTE IDENTIFICADOR PONTOVIRGULA;
 
-escopo   : CLASSE IDENTIFICADOR E_CHAVE ( VISIBILIDADE (atribuicao | funcao_declaracao ) )* D_CHAVE ;
+escopo   : CLASSE IDENTIFICADOR E_CHAVE ( ( VISIBILIDADE atribuicao | funcao_declaracao ) )* D_CHAVE ;
 
 
 expressao : (DIGITO | FUNCAO | IDENTIFICADOR (MAISMAIS | MENOSMENOS)? ) (OPERADORES_MATEMATICOS (DIGITO | FUNCAO | ( IDENTIFICADOR (MAISMAIS | MENOSMENOS)? )))* ; 
