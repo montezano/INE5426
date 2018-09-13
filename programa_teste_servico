@@ -1,0 +1,31 @@
+servico meu_servico{
+	
+	protegido inteiro atributo1 = 100;
+	visualizavel fracionario atributo2 = 20.4;
+
+	privado funcao alguma_coisa2 (inteiro valor1, fracionario valor2){
+	
+		texto valor3 = "um texto qualQUER";
+		constante logico const1 = verdadeiro; 
+
+		para (inteiro i = 0 ; i < 10 ; i++){
+
+			enquanto ( i >= 5) {
+
+				minha_classe c = novo(); // esta correto, NAO MEXER!!!!!!
+
+				inteiro [] array = inteiro [1000]; // criando um array
+
+				se (!const1 || const1 && verdadeiro){
+					c.alguma_coisa(1,2);
+				}
+
+				inteiro mult = 5 * 5 + (50 / 55) - 2 % 3 + (3 ^ 4);
+
+				logico ternario = const1 ? verdadeiro : falso; 
+
+			}
+		}
+
+	} 
+}
