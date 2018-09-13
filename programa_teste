@@ -13,9 +13,12 @@ classe minha_classe{
 
 		se (const1 == falso){
 
-		}senao se(const1 == verdadeiro){
+		} senao { 
+			se(const1 == verdadeiro){
 
-		}senao{
+			}senao{
+
+			}
 
 		}
 
