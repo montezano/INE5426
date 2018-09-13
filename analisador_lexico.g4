@@ -130,5 +130,12 @@ chamada_funcao_classe : IDENTIFICADOR SETA IDENTIFICADOR E_PARENTESES (IDENTIFIC
 
 chamada_funcao_servico : IDENTIFICADOR PONTO IDENTIFICADOR E_PARENTESES (IDENTIFICADOR (VIRGULA IDENTIFICADOR)*)? D_PARENTESES PONTOVIRGULA;
 
-logica_da_aplicacao : (chamada_funcao_classe | chamada_funcao_servico | atribuicao | operacao_matematica | se | para | enquanto | escolha |
-                      RETORNO (LITERAL | IDENTIFICADOR | TEXTO ) ) PONTOVIRGULA;
+logica_da_aplicacao : ( chamada_funcao_classe
+	| chamada_funcao_servico 
+	| atribuicao 
+	| operacao_matematica 
+	| se 
+	| para 
+	| enquanto 
+	| escolha 
+	| RETORNO (LITERAL | IDENTIFICADOR | TEXTO ) );
