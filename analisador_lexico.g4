@@ -111,7 +111,7 @@ condicao: ( NAO E_PARENTESES NAO? (IDENTIFICADOR |LITERAL) (OPERADORES_COMPARACA
             
 se : SE E_PARENTESES (condicao) D_PARENTESES E_CHAVE
      (logica_da_aplicacao)?
-     D_CHAVE (SENAO E_CHAVE (logica_da_aplicacao) D_CHAVE)?;
+     D_CHAVE (SENAO E_CHAVE (logica_da_aplicacao)? D_CHAVE)?;
 
 para : PARA E_PARENTESES atribuicao PONTOVIRGULA condicao PONTOVIRGULA operacao_matematica D_PARENTESES E_CHAVE (logica_da_aplicacao) D_CHAVE ;
 
