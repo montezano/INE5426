@@ -116,9 +116,9 @@ se : SE E_PARENTESES (condicao) D_PARENTESES E_CHAVE
      (logica_da_aplicacao)?
      D_CHAVE (SENAO E_CHAVE (logica_da_aplicacao)? D_CHAVE)?;
 
-para : PARA E_PARENTESES atribuicao condicao PONTOVIRGULA operacao_matematica D_PARENTESES E_CHAVE (logica_da_aplicacao) D_CHAVE ;
+para : PARA E_PARENTESES atribuicao condicao PONTOVIRGULA operacao_matematica D_PARENTESES E_CHAVE (logica_da_aplicacao)+ D_CHAVE ;
 
-enquanto : ENQUANTO E_PARENTESES condicao D_PARENTESES E_CHAVE (logica_da_aplicacao) D_CHAVE;
+enquanto : ENQUANTO E_PARENTESES condicao D_PARENTESES E_CHAVE (logica_da_aplicacao)+ D_CHAVE;
 
 caso: CASO ( LITERAL | TEXTO ) DOISPONTOS (logica_da_aplicacao )*;
       
