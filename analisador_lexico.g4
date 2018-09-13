@@ -138,3 +138,6 @@ logica_da_aplicacao : ( chamada_funcao_classe
 	| escolha 
 	| PARAR PONTOVIRGULA
 	| RETORNO (LITERAL | IDENTIFICADOR | TEXTO ) PONTOVIRGULA);
+
+ternario 
+	: ( IDENTIFICADOR | condicao ) '?' logica_da_aplicacao* DOISPONTOS logica_da_aplicacao* PONTOVIRGULA ;
