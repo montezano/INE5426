@@ -117,7 +117,7 @@ para : PARA E_PARENTESES atribuicao PONTOVIRGULA condicao PONTOVIRGULA operacao_
 
 enquanto : ENQUANTO E_PARENTESES condicao D_PARENTESES E_CHAVE (logica_da_aplicacao) D_CHAVE;
 
-caso: CASO ( LITERAL | TEXTO ) DOISPONTOS (logica_da_aplicacao PONTOVIRGULA)*;
+caso: CASO ( LITERAL | TEXTO ) DOISPONTOS (logica_da_aplicacao )*;
       
 escolha : ESCOLHA E_PARENTESES IDENTIFICADOR D_PARENTESES E_CHAVE 
           caso+
@@ -136,5 +136,5 @@ logica_da_aplicacao : ( chamada_funcao_classe
 	| para 
 	| enquanto 
 	| escolha 
-	| PARAR
-	| RETORNO (LITERAL | IDENTIFICADOR | TEXTO ) );
+	| PARAR PONTOVIRGULA
+	| RETORNO (LITERAL | IDENTIFICADOR | TEXTO ) PONTOVIRGULA);
