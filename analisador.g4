@@ -134,7 +134,8 @@ chamada_funcao_servico : IDENTIFICADOR SETA IDENTIFICADOR E_PARENTESES (IDENTIFI
 
 logica_da_aplicacao : ( chamada_funcao_classe
 	| chamada_funcao_servico 
-	| atribuicao 
+	| atribuicao
+	| atribuicao_classe 
 	| se 
 	| para 
 	| enquanto 
