@@ -132,7 +132,6 @@ chamada_funcao_servico : IDENTIFICADOR PONTO IDENTIFICADOR E_PARENTESES (IDENTIF
 logica_da_aplicacao : ( chamada_funcao_classe
 	| chamada_funcao_servico 
 	| atribuicao 
-	| operacao_matematica 
 	| se 
 	| para 
 	| enquanto 
