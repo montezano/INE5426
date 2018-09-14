@@ -89,7 +89,7 @@ IDENTIFICADOR : LETRA (LETRA | DIGITO | '_')* ;
 
 // ANALISADOR SINTATICO
 
-principal : importar? ( escopo | (PRINCIPAL E_CHAVE (logica_da_aplicacao) D_CHAVE )) ;
+principal : importar? ( escopo | (PRINCIPAL E_CHAVE (logica_da_aplicacao) D_CHAVE ))+ ;
 
 importar : IMPORTE IDENTIFICADOR PONTOVIRGULA;
 
@@ -97,10 +97,16 @@ escopo   : CLASSE IDENTIFICADOR E_CHAVE ( ( VISIBILIDADE atribuicao | funcao_dec
 
 digito   : DIGITO+ (PONTO (DIGITO)*)?;
 
-expressao : (( IDENTIFICADOR (MAISMAIS | MENOSMENOS)? ) | LITERAL ) (OPERADORES_MATEMATICOS (digito | ( IDENTIFICADOR (MAISMAIS | MENOSMENOS)? ) ))* ; 
+expressao
+	: expressao_matematica
+	| E_PARENTESES expressao_matematica D_PARENTESES 
+	| expressao_matematica OPERADORES_MATEMATICOS expressao
+	| expressao OPERADORES_MATEMATICOS expressao ;
+
+expressao_matematica : (( IDENTIFICADOR (MAISMAIS | MENOSMENOS)? ) | LITERAL ) (OPERADORES_MATEMATICOS (( IDENTIFICADOR (MAISMAIS | MENOSMENOS)? ) | LITERAL ))* ; 
 
 
-atribuicao : (QUALIFICADOR? TIPO)? IDENTIFICADOR (ATRIBUICAO (expressao | TEXTO) )?  PONTOVIRGULA;
+atribuicao : (QUALIFICADOR? TIPO)? IDENTIFICADOR (ATRIBUICAO (expressao | ternario | TEXTO) )?  PONTOVIRGULA;
 
 atribuicao_classe : IDENTIFICADOR IDENTIFICADOR ATRIBUICAO NOVO E_PARENTESES ((TIPO IDENTIFICADOR VIRGULA)* (TIPO IDENTIFICADOR))? D_PARENTESES PONTOVIRGULA;
 
@@ -132,9 +138,9 @@ escolha : ESCOLHA E_PARENTESES IDENTIFICADOR D_PARENTESES E_CHAVE
 
 
 
-chamada_funcao_classe : IDENTIFICADOR PONTO IDENTIFICADOR E_PARENTESES ((IDENTIFICADOR | digito) (VIRGULA (IDENTIFICADOR | digito))*)? D_PARENTESES PONTOVIRGULA;
+chamada_funcao_classe : IDENTIFICADOR PONTO IDENTIFICADOR E_PARENTESES ((IDENTIFICADOR | LITERAL) (VIRGULA (IDENTIFICADOR | LITERAL))*)? D_PARENTESES PONTOVIRGULA;
 
-chamada_funcao_servico : IDENTIFICADOR SETA IDENTIFICADOR E_PARENTESES ((IDENTIFICADOR | digito) (VIRGULA IDENTIFICADOR)*)? D_PARENTESES PONTOVIRGULA;
+chamada_funcao_servico : IDENTIFICADOR SETA IDENTIFICADOR E_PARENTESES ((IDENTIFICADOR | LITERAL) (VIRGULA (IDENTIFICADOR | LITERAL))*)? D_PARENTESES PONTOVIRGULA;
 
 logica_da_aplicacao : ( chamada_funcao_classe
 	| chamada_funcao_servico 
@@ -149,4 +155,4 @@ logica_da_aplicacao : ( chamada_funcao_classe
 	| RETORNO (LITERAL | IDENTIFICADOR | TEXTO ) PONTOVIRGULA);
 
 ternario 
-	: ( IDENTIFICADOR | condicao ) '?' logica_da_aplicacao* DOISPONTOS logica_da_aplicacao* PONTOVIRGULA ;
+	: ( IDENTIFICADOR | condicao ) '?' ( expressao | chamada_funcao_classe | chamada_funcao_classe)* DOISPONTOS (( expressao | chamada_funcao_classe | chamada_funcao_classe)* | PONTOVIRGULA );
