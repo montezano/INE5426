@@ -14,10 +14,8 @@ servico meu_servico{
 
 				minha_classe c = novo(); // esta correto, NAO MEXER!!!!!!
 
-				inteiro [] array = inteiro [1000]; // criando um array
-
 				se (!const1 || const1 && verdadeiro){
-					c.alguma_coisa(1,2);
+					c.alguma_coisa(1 , 2);
 				}
 
 				inteiro mult = 5 * 5 + (50 / 55) - 2 % 3 + (3 ^ 4);
