@@ -1,0 +1,8 @@
+	se (const1 == falso && fracionario1 >= 2.3 || meutexto1 != "texto"){
+			fracionario fracionario1 = fracionario1 / 2;
+			retorno fracionario1;
+		} senao { 
+			fracionario fracionario1 = fracionario1 * 2;
+			retorno fracionario1;
+
+		}
