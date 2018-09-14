@@ -93,7 +93,7 @@ principal : importar? ( escopo | (PRINCIPAL E_CHAVE (logica_da_aplicacao) D_CHAV
 
 importar : IMPORTE IDENTIFICADOR PONTOVIRGULA;
 
-escopo   : CLASSE IDENTIFICADOR E_CHAVE ( ( VISIBILIDADE atribuicao | funcao_declaracao ) )* D_CHAVE ;
+escopo   : CLASSE IDENTIFICADOR E_CHAVE ( ( VISIBILIDADE atribuicao PONTOVIRGULA | funcao_declaracao ) )* D_CHAVE ;
 
 digito   : DIGITO+ (PONTO (DIGITO)*)?;
 
@@ -106,9 +106,9 @@ expressao
 expressao_matematica : (( IDENTIFICADOR (MAISMAIS | MENOSMENOS)? ) | LITERAL ) (OPERADORES_MATEMATICOS (( IDENTIFICADOR (MAISMAIS | MENOSMENOS)? ) | LITERAL ))* ; 
 
 
-atribuicao : (QUALIFICADOR? TIPO)? IDENTIFICADOR (ATRIBUICAO (expressao | ternario | TEXTO) )?  PONTOVIRGULA;
+atribuicao : (QUALIFICADOR? TIPO)? IDENTIFICADOR (ATRIBUICAO (expressao | ternario | TEXTO | chamada_funcao_classe | chamada_funcao_servico ) )? ;
 
-atribuicao_classe : IDENTIFICADOR IDENTIFICADOR ATRIBUICAO NOVO E_PARENTESES ((TIPO IDENTIFICADOR VIRGULA)* (TIPO IDENTIFICADOR))? D_PARENTESES PONTOVIRGULA;
+atribuicao_classe : IDENTIFICADOR IDENTIFICADOR ATRIBUICAO NOVO E_PARENTESES ((TIPO IDENTIFICADOR VIRGULA)* (TIPO IDENTIFICADOR))? D_PARENTESES ;
 
 atribuicao_ternario : (QUALIFICADOR? TIPO)? IDENTIFICADOR ATRIBUICAO ternario;
 
@@ -119,14 +119,14 @@ funcao_declaracao : VISIBILIDADE TIPO? FUNCAO IDENTIFICADOR E_PARENTESES ((TIPO 
          ( logica_da_aplicacao )* 
          D_CHAVE;
 
-condicao: ( NAO E_PARENTESES NAO? (IDENTIFICADOR |LITERAL) (OPERADORES_COMPARACAO NAO?(IDENTIFICADOR |LITERAL))? D_PARENTESES |
-          NAO?(IDENTIFICADOR |LITERAL) (OPERADORES_COMPARACAO NAO?(IDENTIFICADOR |LITERAL))? (OPERADORES_LOGICOS condicao)*);
+condicao: ( NAO E_PARENTESES NAO? (IDENTIFICADOR |LITERAL | TEXTO) (OPERADORES_COMPARACAO NAO?(IDENTIFICADOR | LITERAL | TEXTO))? D_PARENTESES |
+          NAO?(IDENTIFICADOR | LITERAL | TEXTO) (OPERADORES_COMPARACAO NAO?(IDENTIFICADOR | LITERAL | TEXTO))? (OPERADORES_LOGICOS condicao)*);
 
 se : SE E_PARENTESES (condicao) D_PARENTESES E_CHAVE
      (logica_da_aplicacao)?
      D_CHAVE (SENAO E_CHAVE (logica_da_aplicacao)? D_CHAVE)?;
 
-para : PARA E_PARENTESES atribuicao condicao PONTOVIRGULA operacao_matematica D_PARENTESES E_CHAVE (logica_da_aplicacao)+ D_CHAVE ;
+para : PARA E_PARENTESES atribuicao PONTOVIRGULA condicao PONTOVIRGULA operacao_matematica D_PARENTESES E_CHAVE (logica_da_aplicacao)+ D_CHAVE ;
 
 enquanto : ENQUANTO E_PARENTESES condicao D_PARENTESES E_CHAVE (logica_da_aplicacao)+ D_CHAVE;
 
@@ -138,21 +138,18 @@ escolha : ESCOLHA E_PARENTESES IDENTIFICADOR D_PARENTESES E_CHAVE
 
 
 
-chamada_funcao_classe : IDENTIFICADOR PONTO IDENTIFICADOR E_PARENTESES ((IDENTIFICADOR | LITERAL) (VIRGULA (IDENTIFICADOR | LITERAL))*)? D_PARENTESES PONTOVIRGULA;
+chamada_funcao_classe : IDENTIFICADOR PONTO IDENTIFICADOR E_PARENTESES ((IDENTIFICADOR | LITERAL) (VIRGULA (IDENTIFICADOR | LITERAL))*)? D_PARENTESES ;
 
-chamada_funcao_servico : IDENTIFICADOR SETA IDENTIFICADOR E_PARENTESES ((IDENTIFICADOR | LITERAL) (VIRGULA (IDENTIFICADOR | LITERAL))*)? D_PARENTESES PONTOVIRGULA;
+chamada_funcao_servico : IDENTIFICADOR SETA IDENTIFICADOR E_PARENTESES ((IDENTIFICADOR | LITERAL) (VIRGULA (IDENTIFICADOR | LITERAL))*)? D_PARENTESES ;
 
 logica_da_aplicacao : ( chamada_funcao_classe
 	| chamada_funcao_servico 
 	| atribuicao
 	| atribuicao_classe 
 	| atribuicao_ternario
-	| se 
-	| para 
-	| enquanto 
-	| escolha 
-	| PARAR PONTOVIRGULA
-	| RETORNO (LITERAL | IDENTIFICADOR | TEXTO ) PONTOVIRGULA);
+	| PARAR
+	| RETORNO (LITERAL | IDENTIFICADOR | TEXTO ) ) PONTOVIRGULA 
+	| ( se | para | enquanto | escolha ) ;
 
 ternario 
 	: ( IDENTIFICADOR | condicao ) '?' ( expressao | chamada_funcao_classe | chamada_funcao_classe)* DOISPONTOS (( expressao | chamada_funcao_classe | chamada_funcao_classe)* | PONTOVIRGULA );

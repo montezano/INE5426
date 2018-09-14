@@ -8,11 +8,18 @@ classe minha_classe{
 	
 	publico funcao alguma_coisa (inteiro valor1, fracionario valor2){
 	
-		texto valor3 = "um texto qualQUER";
+		// atribuicoes
+		constante fracionario fracionario1;
+		constante fracionario fracionario2 = 2.2;
+		constante fracionario fracionario3 = 3.0 + 5 + ( fracionario1 + fracionario2);
+		texto meutexto1;
+		texto meutexto2 = "texto";
+		meutexto3 = meutexto2;
 		constante logico const1 = verdadeiro; 
 
-		se (const1 == falso){
-
+		// condicionais
+		se (const1 == falso && fracionario1 >= 2.3 || meutexto1 != "texto"){
+			retorno verdadeiro;
 		} senao { 
 			se(const1 == verdadeiro){
 
@@ -29,6 +36,10 @@ classe minha_classe{
 			caso "valor3" : parar;
 		}
 
+		// chamada de servico
+		fracionario1 = meu_servico->alguma_coisa2(1, 2.2);
+		meu_servico->alguma_coisa();
+		meu_servico->alguma_coisa(verdadeiro, const1);
 	} 	
 }
 
@@ -39,6 +50,7 @@ servico meu_servico{
 
 	privado funcao alguma_coisa2 (inteiro valor1, fracionario valor2){
 	
+
 		texto valor3 = "um texto qualQUER";
 		constante logico const1 = verdadeiro; 
 
