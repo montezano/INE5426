@@ -99,9 +99,13 @@ digito   : DIGITO+ (PONTO (DIGITO)*)?;
 
 expressao : (( IDENTIFICADOR (MAISMAIS | MENOSMENOS)? ) | LITERAL ) (OPERADORES_MATEMATICOS (digito | ( IDENTIFICADOR (MAISMAIS | MENOSMENOS)? ) ))* ; 
 
+
 atribuicao : (QUALIFICADOR? TIPO)? IDENTIFICADOR (ATRIBUICAO (expressao | TEXTO) )?  PONTOVIRGULA;
 
 atribuicao_classe : IDENTIFICADOR IDENTIFICADOR ATRIBUICAO NOVO E_PARENTESES ((TIPO IDENTIFICADOR VIRGULA)* (TIPO IDENTIFICADOR))? D_PARENTESES PONTOVIRGULA;
+
+atribuicao_ternario : (QUALIFICADOR? TIPO)? IDENTIFICADOR ATRIBUICAO ternario;
+
 
 operacao_matematica : (digito | IDENTIFICADOR) ((OPERADORES_MATEMATICOS operacao_matematica)* | MAISMAIS | MENOSMENOS);
 
@@ -111,7 +115,7 @@ funcao_declaracao : VISIBILIDADE TIPO? FUNCAO IDENTIFICADOR E_PARENTESES ((TIPO 
 
 condicao: ( NAO E_PARENTESES NAO? (IDENTIFICADOR |LITERAL) (OPERADORES_COMPARACAO NAO?(IDENTIFICADOR |LITERAL))? D_PARENTESES |
           NAO?(IDENTIFICADOR |LITERAL) (OPERADORES_COMPARACAO NAO?(IDENTIFICADOR |LITERAL))? (OPERADORES_LOGICOS condicao)*);
-            
+
 se : SE E_PARENTESES (condicao) D_PARENTESES E_CHAVE
      (logica_da_aplicacao)?
      D_CHAVE (SENAO E_CHAVE (logica_da_aplicacao)? D_CHAVE)?;
@@ -136,6 +140,7 @@ logica_da_aplicacao : ( chamada_funcao_classe
 	| chamada_funcao_servico 
 	| atribuicao
 	| atribuicao_classe 
+	| atribuicao_ternario
 	| se 
 	| para 
 	| enquanto 
