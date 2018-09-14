@@ -1,0 +1,5 @@
+para (inteiro i = 0 ; i < 10 ; i++){
+		logico ternario = const1 ? verdadeiro : falso; 
+		operacoes = i + entrada - 2;
+	}
+}

@@ -1,0 +1,6 @@
+escolha (valor3){
+
+			caso "valor"  : retorno valor1;
+			caso "valor2" : valor3 = "valor1"; 
+			caso "valor3" : parar;
+}

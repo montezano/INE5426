@@ -1,0 +1,7 @@
+enquanto ( i >= 5) {
+	minha_classe c = novo();
+
+	se (!const1 || const1 && verdadeiro){
+		c.alguma_coisa(1 , 2);
+	}
+}
