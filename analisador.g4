@@ -123,8 +123,8 @@ condicao: ( NAO E_PARENTESES NAO? (IDENTIFICADOR |LITERAL | TEXTO) (OPERADORES_C
           NAO?(IDENTIFICADOR | LITERAL | TEXTO) (OPERADORES_COMPARACAO NAO?(IDENTIFICADOR | LITERAL | TEXTO))? (OPERADORES_LOGICOS condicao)*);
 
 se : SE E_PARENTESES (condicao) D_PARENTESES E_CHAVE
-     (logica_da_aplicacao)?
-     D_CHAVE (SENAO E_CHAVE (logica_da_aplicacao)? D_CHAVE)?;
+     (logica_da_aplicacao)*
+     D_CHAVE (SENAO E_CHAVE (logica_da_aplicacao)* D_CHAVE)?;
 
 para : PARA E_PARENTESES atribuicao PONTOVIRGULA condicao PONTOVIRGULA operacao_matematica D_PARENTESES E_CHAVE (logica_da_aplicacao)+ D_CHAVE ;
 
