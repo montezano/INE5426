@@ -26,8 +26,8 @@ public class Main {
 			inputFile = filepath + args[0];
 			int endIndex = inputFile.lastIndexOf("/");
 			if (endIndex != -1) {
-        filepath = inputFile.substring(0, endIndex+1);
-    	} else {
+	        filepath = inputFile.substring(0, endIndex+1);
+	    	} else {
 				filepath = "";
 			}
 		}
