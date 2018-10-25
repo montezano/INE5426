@@ -69,7 +69,7 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 	}
 	
 	public void enterAtribuicao(analisadorParser.AtribuicaoContext ctx) {
-		productionNames.put(ctx.ATRIBUICAO(), "atribuicao");
+		productionNames.put(ctx, "atribuicao");
 	}
 
 	public void exitBlocoComando(analisadorParser.Bloco_comandoContext ctx) {
@@ -94,7 +94,7 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 	}
 
 	public void exitAtribuicao(analisadorParser.AtribuicaoContext ctx) {
-		String id = ctx.IDENTIFICADOR().get(0).getText();
+		String id = ctx.IDENTIFICADOR(0).getText();
 
 		
 		SymbolTable st = symbolTable;
@@ -102,13 +102,13 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 		String rule = productionNames.get(c);
 		Symbol symbol = st.lookup(id);
 		if (symbol == null) { // ve se esta em loop ou if
-			while (rule == "bloco_comando" || rule == "CmdDeclAttrib") {
+			while (rule == "bloco_comando" /*|| rule == null*/) {
 				c = c.getParent();
 				rule = productionNames.get(c);
 				if (st.parent != null) {
 					st = st.parent;
 				}
-				if (st.lookup(ctx.IDENTIFICADOR().get(0).getText()) != null) {
+				if (st.lookup(ctx.IDENTIFICADOR(0).getText()) != null) {
 					break;
 				}
 			}
@@ -145,7 +145,7 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 			}
 			return;
 		} else {
-			String type = ctx.getText();
+			String type = ctx.tipo().getText();
 
 			if (productionNames.get(ctx) != null) {
 				rule = productionNames.get(ctx);
