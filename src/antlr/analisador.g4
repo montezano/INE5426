@@ -9,7 +9,6 @@ IMPORTE : 'importe' ;
 CLASSE : ( ESC_CLASSE | ESC_SERVICO );
 VISIBILIDADE : ( V_PUBLICO | V_PRIVADO | V_PROTEGIDO | V_VISUALIZAVEL );
 LITERAL : ( DIGITO+ (PONTO (DIGITO)*)? | VERDADEIRO | FALSO ) ;
-TIPO : ( T_INTEIRO | T_FRACIONARIO | T_LOGICO | T_TEXTO ) ;
 LOGICO : ( VERDADEIRO | FALSO ) ;
 OPERADORES_MATEMATICOS : ( MAIS | MENOS | DIV | MULT | MODULO | EXP ) ;
 OPERADORES_LOGICOS : (E | OU );
@@ -89,6 +88,8 @@ IDENTIFICADOR : LETRA (LETRA | DIGITO | '_')* ;
 
 // ANALISADOR SINTATICO
 
+tipo : ( T_INTEIRO | T_FRACIONARIO | T_LOGICO | T_TEXTO ) ;
+
 principal : importar? ( escopo | (PRINCIPAL E_CHAVE (logica_da_aplicacao) D_CHAVE ))+ ;
 
 importar : IMPORTE IDENTIFICADOR PONTOVIRGULA;
@@ -106,16 +107,16 @@ expressao
 expressao_matematica : (( IDENTIFICADOR (MAISMAIS | MENOSMENOS)? ) | LITERAL ) (OPERADORES_MATEMATICOS (( IDENTIFICADOR (MAISMAIS | MENOSMENOS)? ) | LITERAL ))* ; 
 
 
-atribuicao : (QUALIFICADOR? TIPO)? IDENTIFICADOR (ATRIBUICAO (expressao | ternario | TEXTO | chamada_funcao_classe | chamada_funcao_servico ) )? ;
+atribuicao : (QUALIFICADOR? tipo)? IDENTIFICADOR (ATRIBUICAO (expressao | ternario | TEXTO | chamada_funcao_classe | chamada_funcao_servico | IDENTIFICADOR ) )? ;
 
-atribuicao_classe : IDENTIFICADOR IDENTIFICADOR ATRIBUICAO NOVO E_PARENTESES ((TIPO IDENTIFICADOR VIRGULA)* (TIPO IDENTIFICADOR))? D_PARENTESES ;
+atribuicao_classe : IDENTIFICADOR IDENTIFICADOR ATRIBUICAO NOVO E_PARENTESES ((tipo IDENTIFICADOR VIRGULA)* (tipo IDENTIFICADOR))? D_PARENTESES ;
 
-atribuicao_ternario : (QUALIFICADOR? TIPO)? IDENTIFICADOR ATRIBUICAO ternario;
+atribuicao_ternario : (QUALIFICADOR? tipo)? IDENTIFICADOR ATRIBUICAO ternario;
 
 
 operacao_matematica : (digito | IDENTIFICADOR) ((OPERADORES_MATEMATICOS operacao_matematica)* | MAISMAIS | MENOSMENOS);
 
-funcao_declaracao : VISIBILIDADE TIPO? FUNCAO IDENTIFICADOR E_PARENTESES ((TIPO IDENTIFICADOR VIRGULA)* (TIPO IDENTIFICADOR))? D_PARENTESES E_CHAVE 
+funcao_declaracao : VISIBILIDADE tipo? FUNCAO IDENTIFICADOR E_PARENTESES ((tipo IDENTIFICADOR VIRGULA)* (tipo IDENTIFICADOR))? D_PARENTESES E_CHAVE 
          ( logica_da_aplicacao )* 
          D_CHAVE;
 
@@ -136,7 +137,7 @@ escolha : ESCOLHA E_PARENTESES IDENTIFICADOR D_PARENTESES E_CHAVE
           caso+
           D_CHAVE;
 
-
+bloco_comando : se | para | enquanto | escolha ;
 
 chamada_funcao_classe : IDENTIFICADOR PONTO IDENTIFICADOR E_PARENTESES ((IDENTIFICADOR | LITERAL) (VIRGULA (IDENTIFICADOR | LITERAL))*)? D_PARENTESES ;
 
@@ -149,7 +150,7 @@ logica_da_aplicacao : ( chamada_funcao_classe
 	| atribuicao_ternario
 	| PARAR
 	| RETORNO (LITERAL | IDENTIFICADOR | TEXTO ) ) PONTOVIRGULA 
-	| ( se | para | enquanto | escolha ) ;
+	| bloco_comando ;
 
 ternario 
 	: ( IDENTIFICADOR | condicao ) '?' ( expressao | chamada_funcao_classe | chamada_funcao_classe)* DOISPONTOS (( expressao | chamada_funcao_classe | chamada_funcao_classe)* | PONTOVIRGULA );

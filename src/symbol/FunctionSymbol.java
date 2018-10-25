@@ -11,7 +11,7 @@ public class FunctionSymbol extends Symbol {
 	public String functionType;
 
 	public FunctionSymbol(String functionType, ArrayList<String> paramType, ArrayList<Integer> paramSize, Integer size) {
-		super(Symbol.SymbolType.FUNCAO, size);
+		super(Symbol.SymbolType.FUNCAO);
 		this.functionType = functionType;
 		this.paramType = paramType;
 		this.paramSize = paramSize;

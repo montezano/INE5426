@@ -9,7 +9,7 @@ public class SymbolTable extends Symbol {
     public SymbolTable parent; // References parent table
 
     public SymbolTable(SymbolTable parent) {
-        super(Symbol.SymbolType.OBJECT, -1);
+        super(Symbol.SymbolType.VARIAVEL);
         this.parent = parent;
     }
 

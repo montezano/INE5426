@@ -5,7 +5,7 @@ public class Symbol {
 	public enum SymbolType {
 		VARIAVEL,
 		FUNCAO,
-		SERVICO;
+		SERVICO
 	}
 
 	public enum SymbolValueType {
