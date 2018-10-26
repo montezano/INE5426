@@ -294,7 +294,78 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 	}
 
 	public void exitChamada_funcao_servico(analisadorParser.Chamada_funcao_servicoContext ctx) {
+		String idObjeto = ctx.IDENTIFICADOR(0).getText();
+		String idFuncao = ctx.IDENTIFICADOR(1).getText();
+		int line = ctx.getStart().getLine();
 
+		SymbolTable st = symbolTable;
+		ParserRuleContext c = ctx;
+		String rule = productionNames.get(c);
+		while (rule == "bloco_comando" || rule == null) {
+			c = c.getParent();
+			rule = productionNames.get(c);
+			if (st.parent != null) {
+				st = st.parent;
+			}
+			if (st.lookup(ctx.IDENTIFICADOR(0).getText()) != null) {
+				break;
+			}
+		}
+
+		if (st.lookup(idFuncao) == null) {
+			System.out.print("Erro na linha " + line + ": ");
+			System.out.println("Função não definida.");
+			return;
+		}
+
+		ArrayList<String> paramTypes = ((FunctionSymbol) st.lookup(idFuncao)).paramType;
+		int callArgSize = ctx.parametros_chamada().IDENTIFICADOR().size();
+		callArgSize += ctx.parametros_chamada().LITERAL().size();
+		// Checa numero de argumentos
+		if (callArgSize != paramTypes.size()) {
+			System.out.print("Erro na linha " + line + ": ");
+			System.out.println("Número de argumentos incompatível");
+			return;
+		}
+		boolean error = false;
+		// Checa ordem dos tipos e tamanhos
+		for (int i = 0; i < callArgSize; i++) {
+			String callType = ctx.parametros_chamada().getChild(i).getText();
+			String funcType = paramTypes.get(i);
+
+			if (eInteiro(callType)) {
+				if (!funcType.equals("inteiro")) {
+					error = true;
+				}
+			} else if (eFracionario(callType)) {
+				if (!funcType.equals("fracionario")) {
+					error = true;
+				}
+			} else if (callType.equals("verdadeiro") || callType.equals("falso")) {
+				if (!funcType.equals("logico")) {
+					error = true;
+				}
+			} else if (callType.charAt(0) == '\"') {
+				if (!funcType.equals("texto")) {
+					error = true;
+				}
+			} else { // id
+				if (st.lookup(callType) != null) {
+					String symbType = st.lookup(callType).valueType.toString();
+					if (!symbType.equals(funcType)) {
+						System.out.print("Erro na linha " + line + ": ");
+						System.out.println(
+								"Tipo de argumento incompatível. Esperava-se: " + funcType + ". Recebido: " + symbType);
+						return;
+					}
+				}
+			}
+			if (error) {
+				System.out.print("Erro na linha " + line + ": ");
+				System.out.println("Tipo de argumento incompatível. Esperava-se: " + funcType);
+				return;
+			}
+		}
 	}
 	
 	private static boolean eInteiro(String str) {
