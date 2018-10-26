@@ -135,7 +135,9 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 
 	public void exitAtribuicao(analisadorParser.AtribuicaoContext ctx) {
 		String id = ctx.IDENTIFICADOR(0).getText();
-
+		//System.out.println(id);
+		
+		
 		SymbolTable st = symbolTable;
 		ParserRuleContext c = ctx;
 		String rule = productionNames.get(c);
@@ -152,8 +154,11 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 				}
 			}
 
-		}
+		}	
+		
+		
 		symbol = st.lookup(id);
+
 		if (ctx.tipo() == null) {
 			if (symbol == null) {
 				System.out.print("Erro na linha " + ctx.getStart().getLine() + ": ");
@@ -195,6 +200,21 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 				// }
 
 				symbolTable.put(id, symbol);
+			}
+		}
+		
+		if(ctx.tipo().getText().equals("texto") && ctx.ATRIBUICAO() != null) {
+			if(ctx.TEXTO() == null && ctx.IDENTIFICADOR(1) == null) {
+				System.out.print("Erro na linha " + ctx.getStart().getLine() + ": ");
+				System.out.println("Tipos diferentes.");
+				return;
+			} else if(ctx.IDENTIFICADOR(1) != null) {
+				Symbol simbolo = st.lookup(ctx.IDENTIFICADOR(1).getText());
+				if(!simbolo.valueType.toString().equals("texto")) {
+					System.out.print("Erro na linha " + ctx.getStart().getLine() + ": ");
+					System.out.println("Tipos diferentes.");
+					return;
+				}
 			}
 		}
 	}

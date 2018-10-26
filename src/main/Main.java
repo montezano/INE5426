@@ -25,7 +25,7 @@ public class Main {
 
 	public static SymbolTable parse(String[] args, String filepath) throws Exception {
 
-		String inputFile = "/home/montezano/git/INE5426/src/testes/programa_teste_classe";
+		String inputFile = "/home/thomas/Desktop/faculdade/compiladores/INE5426/src/testes/programa_teste_classe";
 		if (args.length > 0) {
 			inputFile = filepath + args[0];
 			int endIndex = inputFile.lastIndexOf("/");

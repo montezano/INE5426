@@ -4,17 +4,18 @@ importe arquivo;
 	mais uma linha
 	outra linha
 */
+
 classe minha_classe{
 	
-	publico funcao alguma_coisa (inteiro valor1, fracionario valor2){
+	publico inteiro funcao alguma_coisa (inteiro valor1, fracionario valor2){
 	
 		// atribuicoes
 		constante fracionario fracionario1;
 		constante fracionario fracionario2 = 2.2;
 		constante fracionario fracionario3 = 3.0 + 5 + ( fracionario1 + fracionario2);
-		texto meutexto1;
-		texto meutexto2 = "texto";
-		meutexto3 = meutexto2;
+		inteiro meutexto1 = 1;
+		texto meutexto2 = meutexto1;
+		inteiro meutexto3 = "oi";
 		constante logico const1 = verdadeiro; 
 
 		// condicionais
@@ -37,7 +38,7 @@ classe minha_classe{
 		}
 
 		// chamada de servico
-		fracionario1 = meu_servico->alguma_coisa2(1, 2.2);
+		fracionario fracionario6 = meu_servico->alguma_coisa2(1, 2.2);
 		meu_servico->alguma_coisa();
 		meu_servico->alguma_coisa(verdadeiro, const1);
 	} 	
@@ -48,7 +49,7 @@ servico meu_servico{
 	protegido inteiro atributo1 = 100;
 	visualizavel fracionario atributo2 = 20.4;
 
-	privado funcao alguma_coisa2 (inteiro valor1, fracionario valor2){
+	privado inteiro funcao alguma_coisa2 (inteiro valor1, fracionario valor2){
 	
 
 		texto valor3 = "um texto qualQUER";
