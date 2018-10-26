@@ -5,16 +5,14 @@ import java.util.ArrayList;
 public class FunctionSymbol extends Symbol {
 
  	public ArrayList<String> paramType = new ArrayList<>(); // Parameters types
- 	public ArrayList<Integer> paramSize = new ArrayList<>(); // Parameters sizes
 	// Lista com tipos dos parametros e tamanho de cada parametro
 	// Precisa do tipo e tamanho do retorno
 	public String functionType;
 
-	public FunctionSymbol(String functionType, ArrayList<String> paramType, ArrayList<Integer> paramSize, Integer size) {
+	public FunctionSymbol(String functionType, ArrayList<String> paramType) {
 		super(Symbol.SymbolType.FUNCAO);
 		this.functionType = functionType;
 		this.paramType = paramType;
-		this.paramSize = paramSize;
 		setFunctionType();
 	}
 
@@ -31,6 +29,9 @@ public class FunctionSymbol extends Symbol {
 				break;
 			case "logico":
 				super.valueType = Symbol.SymbolValueType.BOOLEAN;
+				break;
+			case "vazio":
+				super.valueType = Symbol.SymbolValueType.VAZIO;
 				break;
 		}
 	}

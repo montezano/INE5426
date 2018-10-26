@@ -1,11 +1,14 @@
 package main;
 
+import java.util.ArrayList;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
 import antlr.analisadorBaseListener;
 import antlr.analisadorParser;
 import antlr.analisadorParser.TipoContext;
+import symbol.FunctionSymbol;
 import symbol.Symbol;
 import symbol.SymbolTable;
 import symbol.VariableSymbol;
@@ -58,21 +61,58 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 		productionNames.put(ctx, "escopo_classe");
 	}
 
-	public void enterFuncaoDeclaracao(analisadorParser.Funcao_declaracaoContext ctx) {
+	public void enterFuncao_declaracao(analisadorParser.Funcao_declaracaoContext ctx) { 
 		symbolTable = new SymbolTable(symbolTable);
 		productionNames.put(ctx, "escopo_funcao");
 	}
 
-	public void enterBlocoComando(analisadorParser.Bloco_comandoContext ctx) {
+	public void enterBloco_comando(analisadorParser.Bloco_comandoContext ctx) {
 		symbolTable = new SymbolTable(symbolTable);
 		productionNames.put(ctx, "bloco_comando");
 	}
-	
+
 	public void enterAtribuicao(analisadorParser.AtribuicaoContext ctx) {
 		productionNames.put(ctx, "atribuicao");
 	}
 
-	public void exitBlocoComando(analisadorParser.Bloco_comandoContext ctx) {
+	public void enterParametros_declaracao(analisadorParser.Parametros_declaracaoContext ctx) {
+		for (int i = 0; i < ctx.IDENTIFICADOR().size(); i++) {
+			productionNames.put(ctx.IDENTIFICADOR(i), "parametros_declaracao");
+		}
+	}
+	
+//	public void enterParametros_chamada(analisadorParser.Parametros_chamadaContext ctx) {		
+//		ctx.IDENTIFICADOR().forEach((id) ->{
+//			productionNames.put(id, "parametros_chamada");
+//		});
+//		ctx.LITERAL().forEach((lit) ->{
+//			productionNames.put(lit, "parametros_chamada");
+//		});
+//	}
+	
+	public void exitParametros_declaracao(analisadorParser.Parametros_declaracaoContext ctx) {		
+		for(int i = 0; i < ctx.IDENTIFICADOR().size(); i++) {
+			types.put(ctx.IDENTIFICADOR(i), types.get(ctx.tipo(i)));
+		}
+	}
+
+	
+	
+	// public void
+	// enterChamada_funcao_classe(analisadorParser.Chamada_funcao_classeContext ctx)
+	// {
+	// symbolTable = new SymbolTable(symbolTable);
+	// productionNames.put(ctx, "bloco_funcao_classe");
+	// }
+	//
+	// public void
+	// enterChamada_funcao_servico(analisadorParser.Chamada_funcao_servicoContext
+	// ctx) {
+	// symbolTable = new SymbolTable(symbolTable);
+	// productionNames.put(ctx, "function_block");
+	// }
+
+	public void exitBloco_comando(analisadorParser.Bloco_comandoContext ctx) {
 		symbolTable = symbolTable.parent;
 	}
 
@@ -86,23 +126,22 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 		} else if (ctx.T_TEXTO() != null) {
 			types.put(ctx, Tipo.TEXTO);
 			sizes.put(ctx, -1);
-		} else if(ctx.T_LOGICO() != null) {
+		} else if (ctx.T_LOGICO() != null) {
 			types.put(ctx, Tipo.LOGICO);
 			sizes.put(ctx, -1);
 		}
-		
+
 	}
 
 	public void exitAtribuicao(analisadorParser.AtribuicaoContext ctx) {
 		String id = ctx.IDENTIFICADOR(0).getText();
 
-		
 		SymbolTable st = symbolTable;
 		ParserRuleContext c = ctx;
 		String rule = productionNames.get(c);
 		Symbol symbol = st.lookup(id);
 		if (symbol == null) { // ve se esta em loop ou if
-			while (rule == "bloco_comando" /*|| rule == null*/) {
+			while (rule == "bloco_comando" /* || rule == null */) {
 				c = c.getParent();
 				rule = productionNames.get(c);
 				if (st.parent != null) {
@@ -115,18 +154,15 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 
 		}
 		symbol = st.lookup(id);
-		if(ctx.tipo() == null ) {
-			if(symbol == null) {
+		if (ctx.tipo() == null) {
+			if (symbol == null) {
 				System.out.print("Erro na linha " + ctx.getStart().getLine() + ": ");
 				System.out.println("Variável não inicializada.");
 				return;
 			}
 		}
-		
-		types.put(ctx, types.get(ctx.tipo()));
 
-		// verifica se o simbolo(ID) ja ta na tabela de simbolos se tiver printa erro
-		// semantico e retorna
+		types.put(ctx, types.get(ctx.tipo()));
 
 		if (symbol != null) {
 			switch (symbol.type) {
@@ -151,16 +187,132 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 				rule = productionNames.get(ctx);
 				boolean initialized = true;
 
-				 if (ctx.ATRIBUICAO() == null) {
-					 initialized = false;
-				 }
+				if (ctx.ATRIBUICAO() == null) {
+					initialized = false;
+				}
 				// if (!rule.equals("function_block")) {
-				 symbol = new VariableSymbol(type, initialized);
+				symbol = new VariableSymbol(type, initialized);
 				// }
 
 				symbolTable.put(id, symbol);
 			}
 		}
 	}
+
+	public void exitFuncao_declaracao(analisadorParser.Funcao_declaracaoContext ctx) {
+		symbolTable = symbolTable.parent;
+		String type = null;
+		if(ctx.tipo() != null) {
+			type = ctx.tipo().getText();
+		}
+		String id = ctx.IDENTIFICADOR().getText();
+		Integer nParam = ctx.parametros_declaracao().IDENTIFICADOR().size();
+		ArrayList<String> paramTypes = new ArrayList<>();
+
+		for (int i = 0; i < nParam; i++) {
+			String pType = (types.get(ctx.parametros_declaracao().IDENTIFICADOR(i))).toString();
+			paramTypes.add(pType);
+		}
+
+		Symbol symbol = new FunctionSymbol(type, paramTypes);
+		symbolTable.put(id, symbol);
+	}
+
+	public void exitChamada_funcao_classe(analisadorParser.Chamada_funcao_classeContext ctx) {
+		String idObjeto = ctx.IDENTIFICADOR(0).getText();
+		String idFuncao = ctx.IDENTIFICADOR(1).getText();
+		int line = ctx.getStart().getLine();
+
+		SymbolTable st = symbolTable;
+		ParserRuleContext c = ctx;
+		String rule = productionNames.get(c);
+		while (rule == "bloco_comando" || rule == null) {
+			c = c.getParent();
+			rule = productionNames.get(c);
+			if (st.parent != null) {
+				st = st.parent;
+			}
+			if (st.lookup(ctx.IDENTIFICADOR(0).getText()) != null) {
+				break;
+			}
+		}
+
+		if (st.lookup(idFuncao) == null) {
+			System.out.print("Erro na linha " + line + ": ");
+			System.out.println("Função não definida.");
+			return;
+		}
+
+		ArrayList<String> paramTypes = ((FunctionSymbol) st.lookup(idFuncao)).paramType;
+		int callArgSize = ctx.parametros_chamada().IDENTIFICADOR().size();
+		callArgSize += ctx.parametros_chamada().LITERAL().size();
+		// Checa numero de argumentos
+		if (callArgSize != paramTypes.size()) {
+			System.out.print("Erro na linha " + line + ": ");
+			System.out.println("Número de argumentos incompatível");
+			return;
+		}
+		boolean error = false;
+		// Checa ordem dos tipos e tamanhos
+		for (int i = 0; i < callArgSize; i++) {
+			String callType = ctx.parametros_chamada().getChild(i).getText();
+			String funcType = paramTypes.get(i);
+
+			if (eInteiro(callType)) {
+				if (!funcType.equals("inteiro")) {
+					error = true;
+				}
+			} else if (eFracionario(callType)) {
+				if (!funcType.equals("fracionario")) {
+					error = true;
+				}
+			} else if (callType.equals("verdadeiro") || callType.equals("falso")) {
+				if (!funcType.equals("logico")) {
+					error = true;
+				}
+			} else if (callType.charAt(0) == '\"') {
+				if (!funcType.equals("texto")) {
+					error = true;
+				}
+			} else { // id
+				if (st.lookup(callType) != null) {
+					String symbType = st.lookup(callType).valueType.toString();
+					if (!symbType.equals(funcType)) {
+						System.out.print("Erro na linha " + line + ": ");
+						System.out.println(
+								"Tipo de argumento incompatível. Esperava-se: " + funcType + ". Recebido: " + symbType);
+						return;
+					}
+				}
+			}
+			if (error) {
+				System.out.print("Erro na linha " + line + ": ");
+				System.out.println("Tipo de argumento incompatível. Esperava-se: " + funcType);
+				return;
+			}
+		}
+	}
+
+	public void exitChamada_funcao_servico(analisadorParser.Chamada_funcao_servicoContext ctx) {
+
+	}
+	
+	private static boolean eInteiro(String str) {
+	    try {
+	        Integer.parseInt(str);
+	        return true;
+	    } catch (NumberFormatException e) {
+	        return false;
+	    }
+	}
+
+	private static boolean eFracionario(String str) {
+	    try {
+	        Double.parseDouble(str);
+	        return true;
+	    } catch (NumberFormatException e) {
+	        return false;
+	    }
+}
 
 }

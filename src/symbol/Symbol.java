@@ -12,7 +12,8 @@ public class Symbol {
 		INT ("inteiro"),
 		DOUBLE ("fracionario"),
 		BOOLEAN ("logico"),
-		STRING ("texto");
+		STRING ("texto"),
+		VAZIO ("vazio");
 		
 		private final String name;
 

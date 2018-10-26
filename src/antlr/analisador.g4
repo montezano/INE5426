@@ -33,6 +33,7 @@ T_INTEIRO 	: 'inteiro';
 T_FRACIONARIO   : 'fracionario';
 T_TEXTO   	: 'texto';
 T_LOGICO  	: 'logico';
+T_VAZIO  	: 'vazio';
 RETORNO		: 'retorno';	
 ESCOLHA		: 'escolha';
 CASO		: 'caso';
@@ -88,7 +89,7 @@ IDENTIFICADOR : LETRA (LETRA | DIGITO | '_')* ;
 
 // ANALISADOR SINTATICO
 
-tipo : ( T_INTEIRO | T_FRACIONARIO | T_LOGICO | T_TEXTO ) ;
+tipo : ( T_INTEIRO | T_FRACIONARIO | T_LOGICO | T_TEXTO | T_VAZIO ) ;
 
 principal : importar? ( escopo | (PRINCIPAL E_CHAVE (logica_da_aplicacao) D_CHAVE ))+ ;
 
@@ -116,9 +117,11 @@ atribuicao_ternario : (QUALIFICADOR? tipo)? IDENTIFICADOR ATRIBUICAO ternario;
 
 operacao_matematica : (digito | IDENTIFICADOR) ((OPERADORES_MATEMATICOS operacao_matematica)* | MAISMAIS | MENOSMENOS);
 
-funcao_declaracao : VISIBILIDADE tipo? FUNCAO IDENTIFICADOR E_PARENTESES ((tipo IDENTIFICADOR VIRGULA)* (tipo IDENTIFICADOR))? D_PARENTESES E_CHAVE 
+funcao_declaracao : VISIBILIDADE tipo FUNCAO IDENTIFICADOR E_PARENTESES parametros_declaracao? D_PARENTESES E_CHAVE 
          ( logica_da_aplicacao )* 
          D_CHAVE;
+
+parametros_declaracao : (tipo IDENTIFICADOR) (VIRGULA tipo IDENTIFICADOR)* ;
 
 condicao: ( NAO E_PARENTESES NAO? (IDENTIFICADOR |LITERAL | TEXTO) (OPERADORES_COMPARACAO NAO?(IDENTIFICADOR | LITERAL | TEXTO))? D_PARENTESES |
           NAO?(IDENTIFICADOR | LITERAL | TEXTO) (OPERADORES_COMPARACAO NAO?(IDENTIFICADOR | LITERAL | TEXTO))? (OPERADORES_LOGICOS condicao)*);
@@ -139,9 +142,11 @@ escolha : ESCOLHA E_PARENTESES IDENTIFICADOR D_PARENTESES E_CHAVE
 
 bloco_comando : se | para | enquanto | escolha ;
 
-chamada_funcao_classe : IDENTIFICADOR PONTO IDENTIFICADOR E_PARENTESES ((IDENTIFICADOR | LITERAL) (VIRGULA (IDENTIFICADOR | LITERAL))*)? D_PARENTESES ;
+chamada_funcao_classe : IDENTIFICADOR PONTO IDENTIFICADOR E_PARENTESES ( parametros_chamada? ) D_PARENTESES ;
 
-chamada_funcao_servico : IDENTIFICADOR SETA IDENTIFICADOR E_PARENTESES ((IDENTIFICADOR | LITERAL) (VIRGULA (IDENTIFICADOR | LITERAL))*)? D_PARENTESES ;
+chamada_funcao_servico : IDENTIFICADOR SETA IDENTIFICADOR E_PARENTESES ( parametros_chamada? ) D_PARENTESES ;
+
+parametros_chamada : (IDENTIFICADOR | LITERAL) (VIRGULA (IDENTIFICADOR | LITERAL))*;
 
 logica_da_aplicacao : ( chamada_funcao_classe
 	| chamada_funcao_servico 
