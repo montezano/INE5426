@@ -13,9 +13,9 @@ classe minha_classe{
 		constante fracionario fracionario1;
 		constante fracionario fracionario2 = 2.2;
 		constante fracionario fracionario3 = 3.0 + 5 + ( fracionario1 + fracionario2);
-		inteiro meutexto1 = 1;
-		texto meutexto2 = meutexto1;
-		inteiro meutexto3 = "oi";
+		inteiro meutexto1 = "texto";
+		texto meutexto2 = "oi";
+		inteiro meutexto3 = (3+3);
 		constante logico const1 = verdadeiro; 
 
 		// condicionais

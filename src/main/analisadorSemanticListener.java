@@ -203,18 +203,55 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 			}
 		}
 		
-		if(ctx.tipo().getText().equals("texto") && ctx.ATRIBUICAO() != null) {
-			if(ctx.TEXTO() == null && ctx.IDENTIFICADOR(1) == null) {
+		if(ctx.ATRIBUICAO() != null) {
+			
+			if(ctx.tipo().getText().equals("texto")) {
+				if(ctx.TEXTO() == null) {
+					checkType(ctx, st, "texto");
+				}
+			} else if(ctx.tipo().getText().equals("inteiro")) {
+				if(ctx.expressao() == null) {
+					checkType(ctx, st, "inteiro");
+				}
+			} else if(ctx.tipo().getText().equals("fracionario")) {
+				if(ctx.expressao() == null) {
+					checkType(ctx, st, "fracionario");
+				}
+			} else if(ctx.tipo().getText().equals("logico")) {
+				if(ctx.expressao() == null) {
+					checkType(ctx, st, "logico");
+				}
+			}
+		}
+	}
+	
+	private void checkType(analisadorParser.AtribuicaoContext ctx, SymbolTable st, String type) {
+		if(ctx.IDENTIFICADOR(1) == null) {
+			System.out.print("Erro na linha " + ctx.getStart().getLine() + ": ");
+			System.out.println("Tipos diferentes.");
+			return;
+		} else {
+			Symbol simbolo = st.lookup(ctx.IDENTIFICADOR(1).getText());
+			if(!simbolo.valueType.toString().equals(type)) {
 				System.out.print("Erro na linha " + ctx.getStart().getLine() + ": ");
 				System.out.println("Tipos diferentes.");
 				return;
-			} else if(ctx.IDENTIFICADOR(1) != null) {
-				Symbol simbolo = st.lookup(ctx.IDENTIFICADOR(1).getText());
-				if(!simbolo.valueType.toString().equals("texto")) {
-					System.out.print("Erro na linha " + ctx.getStart().getLine() + ": ");
-					System.out.println("Tipos diferentes.");
-					return;
-				}
+			}
+		}
+	}
+
+	
+	private void checkExpressao(analisadorParser.AtribuicaoContext ctx, SymbolTable st) {
+		if(ctx.IDENTIFICADOR(1) == null) {
+			System.out.print("Erro na linha " + ctx.getStart().getLine() + ": ");
+			System.out.println("Tipos diferentes.");
+			return;
+		} else {
+			Symbol simbolo = st.lookup(ctx.IDENTIFICADOR(1).getText());
+			if(!simbolo.valueType.toString().equals("inteiro")) {
+				System.out.print("Erro na linha " + ctx.getStart().getLine() + ": ");
+				System.out.println("Tipos diferentes.");
+				return;
 			}
 		}
 	}
