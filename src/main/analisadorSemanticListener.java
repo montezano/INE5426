@@ -147,7 +147,7 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 		String rule = productionNames.get(c);
 		Symbol symbol = st.lookup(id);
 		if (symbol == null) { // ve se esta em loop ou if
-			while (rule == "bloco_comando" /* || rule == null */) {
+			while (rule == "atribuicao" || rule == null ) {
 				c = c.getParent();
 				rule = productionNames.get(c);
 				if (st.parent != null) {

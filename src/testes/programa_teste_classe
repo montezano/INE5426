@@ -6,10 +6,12 @@ importe arquivo;
 */
 
 classe minha_classe{
-	
+	publico constante fracionario fracionario1;
+
 	publico inteiro funcao alguma_coisa (inteiro valor1, fracionario valor2){
 	
 		// atribuicoes
+		constante fracionario fracionario1;
 		constante fracionario fracionario1;
 		constante fracionario fracionario2 = 2.2;
 		constante fracionario fracionario3 = 3.0 + 5 + ( fracionario1 + fracionario2);
