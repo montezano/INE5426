@@ -108,7 +108,7 @@ expressao
 expressao_matematica : (( IDENTIFICADOR (MAISMAIS | MENOSMENOS)? ) | LITERAL ) (OPERADORES_MATEMATICOS (( IDENTIFICADOR (MAISMAIS | MENOSMENOS)? ) | LITERAL ))* ; 
 
 
-atribuicao : (QUALIFICADOR? tipo)? IDENTIFICADOR (ATRIBUICAO (IDENTIFICADOR | expressao | ternario | TEXTO | chamada_funcao_classe | chamada_funcao_servico  ) )? ;
+atribuicao : (QUALIFICADOR? tipo)? IDENTIFICADOR (ATRIBUICAO (IDENTIFICADOR | expressao | TEXTO | chamada_funcao_classe | chamada_funcao_servico  ) )? ;
 
 atribuicao_classe : IDENTIFICADOR IDENTIFICADOR ATRIBUICAO NOVO E_PARENTESES ((tipo IDENTIFICADOR VIRGULA)* (tipo IDENTIFICADOR))? D_PARENTESES ;
 

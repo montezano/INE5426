@@ -74,6 +74,10 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 	public void enterAtribuicao(analisadorParser.AtribuicaoContext ctx) {
 		productionNames.put(ctx, "atribuicao");
 	}
+	
+	public void enterAtribuicao_ternario(analisadorParser.Atribuicao_ternarioContext ctx) {
+		productionNames.put(ctx, "atribuicao_ternario");
+	}
 
 	public void enterParametros_declaracao(analisadorParser.Parametros_declaracaoContext ctx) {
 		for (int i = 0; i < ctx.IDENTIFICADOR().size(); i++) {
@@ -168,7 +172,7 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 		}
 
 		types.put(ctx, types.get(ctx.tipo()));
-
+		types.put(ctx.IDENTIFICADOR(0), types.get(ctx.tipo()));
 		if (symbol != null) {
 			switch (symbol.type) {
 			case VARIAVEL:
@@ -204,7 +208,6 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 		}
 		
 		if(ctx.ATRIBUICAO() != null) {
-			
 			if(ctx.tipo().getText().equals("texto")) {
 				if(ctx.TEXTO() == null) {
 					checkType(ctx, st, "texto");
@@ -240,19 +243,14 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 		}
 	}
 
+
 	
-	private void checkExpressao(analisadorParser.AtribuicaoContext ctx, SymbolTable st) {
-		if(ctx.IDENTIFICADOR(1) == null) {
+	public void exitAtribuicao_ternario(analisadorParser.Atribuicao_ternarioContext ctx) {
+		SymbolTable st = symbolTable;
+		if(ctx.ternario().IDENTIFICADOR() == null && ctx.ternario().condicao() == null) {
 			System.out.print("Erro na linha " + ctx.getStart().getLine() + ": ");
-			System.out.println("Tipos diferentes.");
+			System.out.println("Atribuicao de ternario invalida.");
 			return;
-		} else {
-			Symbol simbolo = st.lookup(ctx.IDENTIFICADOR(1).getText());
-			if(!simbolo.valueType.toString().equals("inteiro")) {
-				System.out.print("Erro na linha " + ctx.getStart().getLine() + ": ");
-				System.out.println("Tipos diferentes.");
-				return;
-			}
 		}
 	}
 
