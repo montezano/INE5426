@@ -139,14 +139,13 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 
 	public void exitAtribuicao(analisadorParser.AtribuicaoContext ctx) {
 		String id = ctx.IDENTIFICADOR(0).getText();
-		//System.out.println(id);
-		
+	
 		
 		SymbolTable st = symbolTable;
 		ParserRuleContext c = ctx;
 		String rule = productionNames.get(c);
 		Symbol symbol = st.lookup(id);
-		if (symbol == null) { // ve se esta em loop ou if
+		if (symbol == null) { 
 			while (rule == "atribuicao" || rule == null ) {
 				c = c.getParent();
 				rule = productionNames.get(c);
@@ -157,7 +156,6 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 					break;
 				}
 			}
-
 		}	
 		
 		
@@ -199,9 +197,7 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 				if (ctx.ATRIBUICAO() == null) {
 					initialized = false;
 				}
-				// if (!rule.equals("function_block")) {
 				symbol = new VariableSymbol(type, initialized);
-				// }
 
 				symbolTable.put(id, symbol);
 			}
@@ -246,7 +242,6 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 
 	
 	public void exitAtribuicao_ternario(analisadorParser.Atribuicao_ternarioContext ctx) {
-		SymbolTable st = symbolTable;
 		if(ctx.ternario().IDENTIFICADOR() == null && ctx.ternario().condicao() == null) {
 			System.out.print("Erro na linha " + ctx.getStart().getLine() + ": ");
 			System.out.println("Atribuicao de ternario invalida.");
@@ -274,7 +269,6 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 	}
 
 	public void exitChamada_funcao_classe(analisadorParser.Chamada_funcao_classeContext ctx) {
-		String idObjeto = ctx.IDENTIFICADOR(0).getText();
 		String idFuncao = ctx.IDENTIFICADOR(1).getText();
 		int line = ctx.getStart().getLine();
 
@@ -349,7 +343,6 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 	}
 
 	public void exitChamada_funcao_servico(analisadorParser.Chamada_funcao_servicoContext ctx) {
-		String idObjeto = ctx.IDENTIFICADOR(0).getText();
 		String idFuncao = ctx.IDENTIFICADOR(1).getText();
 		int line = ctx.getStart().getLine();
 
