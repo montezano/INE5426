@@ -95,6 +95,7 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 		}
 	}
 
+	// CRIAR CÓDIGO PARA IF (SE)
 	public void enterBloco_comando(analisadorParser.Bloco_comandoContext ctx) {
 		symbolTable = new SymbolTable(symbolTable);
 		productionNames.put(ctx, "bloco_comando");
@@ -251,12 +252,20 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 				}
 			}
 		}
-
+		// ADICIONAR CODIGO PARA ACEITAR inteiro a = 2 (TEM QUE TESTE, FIZ ALGUMAS MODIFICACOES)
 		if (compile_error == false) {
-			if (type0 == Type.INT){
-					String var_name = "%" + ctx.declaration().ID().getText();
-					llcode += var_name + " = add i32 0, " + intermediateVars.get(ctx.expression()) + "\n";
-					intermediateVars.put(ctx, var_name);
+			if (ctx.tipo().getText().equals("inteiro")){
+					if(ctx.expressao().expressao_matematica().IDENTIFICADOR(0) == null){
+						// GERACAO DE CODIGO int a = 3
+						String var_name = "%" + ctx.IDENTIFICADOR(0).getText();
+						llcode += var_name + " = add i32 0, %" + ctx.expressao().expressao_matematica().LITERAL().getText()+"\n";					
+
+					}else{
+						// GERACAO DE CODIGO int c = a + b
+						String var_name = "%" + ctx.IDENTIFICADOR(0).getText();
+						llcode += var_name + " = add i32 %" + ctx.expressao().expressao_matematica().IDENTIFICADOR(0).getText()+", %"+ctx.expressao().expressao_matematica().IDENTIFICADOR(1).getText() + "\n";					
+
+					}
 			}
 
 		}
