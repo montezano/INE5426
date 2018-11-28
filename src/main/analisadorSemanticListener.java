@@ -42,6 +42,13 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 
 	public SymbolTable symbolTable;
 
+	//code generation
+	private String llcode = "";
+	private boolean compile_error = false;
+	private int counter_it = 0;
+	private ParseTreeProperty<String> intermediateCode = new ParseTreeProperty<>();
+	private ParseTreeProperty<String> intermediateVars = new ParseTreeProperty<>();
+
 	// anotacoes
 	private ParseTreeProperty<Tipo> types = new ParseTreeProperty<>();
 	private ParseTreeProperty<String> productionNames = new ParseTreeProperty<>();
@@ -64,6 +71,28 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 	public void enterFuncao_declaracao(analisadorParser.Funcao_declaracaoContext ctx) { 
 		symbolTable = new SymbolTable(symbolTable);
 		productionNames.put(ctx, "escopo_funcao");
+
+		//codegeneration
+		Type type = Type.getEnumByString(ctx.tipo().getText());
+		String typ = ctx.tipo().getText();
+		String id = ctx.IDENTIFICADOR().getText();
+		Integer nParam = ctx.parametros_declaracao().IDENTIFICADOR().size();
+
+		if(typ.equals("inteiro")) {
+				String ic = "define i32 @" + id + "(";
+				for(int i = 0; i < nParam; i++) {
+					if(i != 0) {
+						ic += ", ";
+					}
+					String typParam = ctx.parametros_declaracao().tipo(i).getText();
+					String idParam = "%" + ctx.parametros_declaracao().IDENTIFICADOR(i).getText();
+					if(typParam.equals("inteiro")) {
+						ic += "i32 " + idParam;
+					}
+				}
+				ic += ") {\n";
+				llcode += ic;
+		}
 	}
 
 	public void enterBloco_comando(analisadorParser.Bloco_comandoContext ctx) {
@@ -222,18 +251,29 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 				}
 			}
 		}
+
+		if (compile_error == false) {
+			if (type0 == Type.INT){
+					String var_name = "%" + ctx.declaration().ID().getText();
+					llcode += var_name + " = add i32 0, " + intermediateVars.get(ctx.expression()) + "\n";
+					intermediateVars.put(ctx, var_name);
+			}
+
+		}
 	}
 	
 	private void checkType(analisadorParser.AtribuicaoContext ctx, SymbolTable st, String type) {
 		if(ctx.IDENTIFICADOR(1) == null) {
 			System.out.print("Erro na linha " + ctx.getStart().getLine() + ": ");
 			System.out.println("Tipos diferentes.");
+			compile_error = true;
 			return;
 		} else {
 			Symbol simbolo = st.lookup(ctx.IDENTIFICADOR(1).getText());
 			if(!simbolo.valueType.toString().equals(type)) {
 				System.out.print("Erro na linha " + ctx.getStart().getLine() + ": ");
 				System.out.println("Tipos diferentes.");
+				compile_error = true;
 				return;
 			}
 		}
