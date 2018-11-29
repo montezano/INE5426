@@ -73,7 +73,7 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 		productionNames.put(ctx, "escopo_funcao");
 
 		//codegeneration
-		Type type = Type.getEnumByString(ctx.tipo().getText());
+		// Type type = Type.getEnumByString(ctx.tipo().getText());
 		String typ = ctx.tipo().getText();
 		String id = ctx.IDENTIFICADOR().getText();
 		Integer nParam = ctx.parametros_declaracao().IDENTIFICADOR().size();
@@ -102,6 +102,7 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 	}
 
 	public void enterAtribuicao(analisadorParser.AtribuicaoContext ctx) {
+		symbolTable = new SymbolTable(symbolTable);
 		productionNames.put(ctx, "atribuicao");
 	}
 	
@@ -176,7 +177,7 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 		String rule = productionNames.get(c);
 		Symbol symbol = st.lookup(id);
 		if (symbol == null) { 
-			while (rule == "atribuicao" || rule == null ) {
+			while (rule == "atribuicao" || rule == null && c != null) {
 				c = c.getParent();
 				rule = productionNames.get(c);
 				if (st.parent != null) {
@@ -256,14 +257,27 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 		if (compile_error == false) {
 			if (ctx.tipo().getText().equals("inteiro")){
 					if(ctx.expressao().expressao_matematica().IDENTIFICADOR(0) == null){
+						System.out.println(ctx.expressao().expressao_matematica().getText());
 						// GERACAO DE CODIGO int a = 3
 						String var_name = "%" + ctx.IDENTIFICADOR(0).getText();
-						llcode += var_name + " = add i32 0, %" + ctx.expressao().expressao_matematica().LITERAL().getText()+"\n";					
-
+						
+						llcode += var_name + " = add i32 0, " + ctx.expressao().expressao_matematica().getText() + "\n";
 					}else{
 						// GERACAO DE CODIGO int c = a + b
 						String var_name = "%" + ctx.IDENTIFICADOR(0).getText();
-						llcode += var_name + " = add i32 %" + ctx.expressao().expressao_matematica().IDENTIFICADOR(0).getText()+", %"+ctx.expressao().expressao_matematica().IDENTIFICADOR(1).getText() + "\n";					
+						String operation = ctx.expressao().expressao_matematica().OPERADORES_MATEMATICOS(0).getText();
+						String op_name = "";
+						if (operation.equals("+")) {
+							op_name = "add";
+						} else if (operation.equals("-")) {
+							op_name = "sub";
+						} else if (operation.equals("*")) {
+							op_name = "mul";
+						} else if (operation.equals("/")) {
+							op_name = "udiv";
+						}
+						llcode += var_name + " = " + op_name + " i32 %" + ctx.expressao().expressao_matematica().IDENTIFICADOR(0).getText()+", %"+ctx.expressao().expressao_matematica().IDENTIFICADOR(1).getText() + "\n";					
+						System.out.print(llcode);
 
 					}
 			}

@@ -91,7 +91,7 @@ IDENTIFICADOR : LETRA (LETRA | DIGITO | '_')* ;
 
 tipo : ( T_INTEIRO | T_FRACIONARIO | T_LOGICO | T_TEXTO | T_VAZIO ) ;
 
-principal : importar? ( escopo | (PRINCIPAL E_CHAVE (logica_da_aplicacao) D_CHAVE ))+ ;
+principal : importar? ( logica_da_aplicacao | escopo | (PRINCIPAL E_CHAVE (logica_da_aplicacao) D_CHAVE ))+ ;
 
 importar : IMPORTE IDENTIFICADOR PONTOVIRGULA;
 

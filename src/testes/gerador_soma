@@ -1,0 +1,6 @@
+inteiro dois = 2;
+inteiro quatro = 4;
+inteiro soma = dois + quatro;
+inteiro subtracao = quatro - dois;
+inteiro multiplicacao = quatro * dois;
+inteiro divisao = quatro / dois;
