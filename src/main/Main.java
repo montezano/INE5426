@@ -25,7 +25,8 @@ public class Main {
 
 	public static SymbolTable parse(String[] args, String filepath) throws Exception {
 
-		String inputFile = "/home/thomas/Desktop/faculdade/compiladores/INE5426/src/testes/gerador_soma";
+		String inputFile = "/home/thomas/Desktop/faculdade/compiladores/INE5426/src/testes/gerador_if";
+
 		if (args.length > 0) {
 			inputFile = filepath + args[0];
 			int endIndex = inputFile.lastIndexOf("/");
@@ -67,6 +68,7 @@ public class Main {
 		ParseTreeWalker walker = new ParseTreeWalker();
 		analisadorSemanticListener semanticListener = new analisadorSemanticListener(filepath);
 		walker.walk(semanticListener, tree);
+		System.out.println(semanticListener.getllcode());
 		return semanticListener.getSymbolTable();
 
 	}

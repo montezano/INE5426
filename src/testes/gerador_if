@@ -1,0 +1,5 @@
+inteiro a = 2;
+inteiro b = 2;
+
+se (a == b) {
+}
