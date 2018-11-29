@@ -55,6 +55,9 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 	// private ParseTreeProperty<String> id = new ParseTreeProperty<>();
 	private ParseTreeProperty<Integer> sizes = new ParseTreeProperty<>();
 
+	public String getllcode(){
+		return llcode;
+	}
 	public analisadorSemanticListener(String filepath) {
 		this.filepath = filepath;
 	}
@@ -96,9 +99,29 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 	}
 
 	// CRIAR CÓDIGO PARA IF (SE)
+	// SE a == b
 	public void enterBloco_comando(analisadorParser.Bloco_comandoContext ctx) {
 		symbolTable = new SymbolTable(symbolTable);
 		productionNames.put(ctx, "bloco_comando");
+		if (compile_error == false) {
+			if (ctx.se() != null) {
+				//analisadorParser.If_blockContext blockCtx = (analisadorParser.If_blockContext) ctx.getParent();
+				if (compile_error == false) {
+					llcode += "%t_0 = add i32 0, %"+ctx.se().condicao().IDENTIFICADOR(0).getText();
+					llcode += "%t_1 = add i32 0, %"+ctx.se().condicao().IDENTIFICADOR(1).getText();
+					llcode += "%t_2 = icmp eq i32 %t_0, %t_1";					
+					String if_label = "%l_" + counter_it;
+					String if_labelX = "l_" + counter_it;
+					counter_it++;
+					String exit_label = "%l_exit";
+					counter_it++;
+					llcode += "br i1 %t2, label " + if_label + ", label " + exit_label + "\n";
+					llcode += if_labelX + ":\n";
+					//intermediateVars.put(ctx, exit_label);
+				}
+				
+			}
+		}
 	}
 
 	public void enterAtribuicao(analisadorParser.AtribuicaoContext ctx) {
@@ -147,7 +170,10 @@ public class analisadorSemanticListener extends analisadorBaseListener {
 	// }
 
 	public void exitBloco_comando(analisadorParser.Bloco_comandoContext ctx) {
-		symbolTable = symbolTable.parent;
+		symbolTable = symbolTable.parent;	
+		//l_exit
+		llcode += "br label %l_exit \n";
+		llcode += "%l_exit :\n";
 	}
 
 	public void exitTipo(analisadorParser.TipoContext ctx) {
